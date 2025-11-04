@@ -93,7 +93,7 @@
         }
 
         /* ==============================
-           CABEÇALHO
+           CABEÇALHO E MENU MOBILE
         ============================== */
         header {
             background-color: var(--branco);
@@ -109,6 +109,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
+            position: relative;
         }
 
         .logo {
@@ -117,23 +118,86 @@
             color: var(--rosa-principal);
         }
 
-        nav ul {
+        /* Menu Desktop */
+        .nav-desktop {
+            display: flex;
+        }
+
+        .nav-desktop ul {
             display: flex;
             list-style: none;
         }
 
-        nav ul li {
+        .nav-desktop ul li {
             margin-left: 25px;
         }
 
-        nav ul li a {
+        .nav-desktop ul li a {
             text-decoration: none;
             color: var(--cinza-escuro);
             font-weight: 500;
             transition: color 0.3s;
         }
 
-        nav ul li a:hover {
+        .nav-desktop ul li a:hover {
+            color: var(--rosa-principal);
+        }
+
+        /* Menu Mobile */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--rosa-principal);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .nav-mobile {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--branco);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-mobile.active {
+            display: block;
+        }
+
+        .nav-mobile ul {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-mobile ul li {
+            border-bottom: 1px solid var(--rosa-suave);
+        }
+
+        .nav-mobile ul li:last-child {
+            border-bottom: none;
+        }
+
+        .nav-mobile ul li a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--cinza-escuro);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-mobile ul li a:hover {
+            background-color: var(--rosa-suave);
             color: var(--rosa-principal);
         }
 
@@ -710,16 +774,22 @@
         }
 
         @media (max-width: 768px) {
+            /* Menu Mobile */
+            .nav-desktop {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
             .header-container {
                 flex-direction: column;
+                align-items: flex-start;
             }
             
-            nav ul {
-                margin-top: 15px;
-            }
-            
-            nav ul li {
-                margin: 0 10px;
+            nav {
+                width: 100%;
             }
             
             .hero {
@@ -755,6 +825,44 @@
             .catalogo-item img {
                 height: 250px;
             }
+
+            /* Sistema de Numeração - Fotos completas no mobile */
+            .catalogo-mini-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .catalogo-mini-item {
+                height: 250px; /* Aumentei a altura para mostrar mais da imagem */
+                width: 100%;
+            }
+            
+            .catalogo-mini-item img {
+                object-fit: contain; /* Mudei para contain para mostrar a imagem completa */
+                background-color: var(--rosa-suave); /* Fundo para áreas transparentes */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 120px 0 60px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .catalogo-mini-item {
+                height: 200px;
+            }
+            
+            .funcionalidade-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -765,7 +873,28 @@
     <header>
         <div class="container header-container">
             <img src="https://res.cloudinary.com/dnluplt44/image/upload/v1762267463/Design_sem_nome_21_gdr1og.png" alt="Clube de Moldes Premium" class="logo-img">
-            <nav>
+            
+            <!-- Menu Toggle para Mobile -->
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <!-- Menu Desktop -->
+            <nav class="nav-desktop">
+                <ul>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#como-funciona">Vantagens</a></li>
+                    <li><a href="#catalogo">Modelos</a></li>
+                    <li><a href="#avaliacoes">Resultados</a></li>
+                    <li><a href="#planos">Assinaturas</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Menu Mobile -->
+            <nav class="nav-mobile" id="navMobile">
                 <ul>
                     <li><a href="#inicio">Início</a></li>
                     <li><a href="#como-funciona">Vantagens</a></li>
@@ -788,7 +917,6 @@
             <a href="#planos" class="btn">Fazer Minha Assinatura</a>
             
             <div class="video-container">
-                <!-- COLE O LINK DO SEU VÍDEO AQUI -->
                 <iframe 
                     src="https://res.cloudinary.com/dnluplt44/video/upload/v1762271785/Trabalho_gffpd6.mp4" 
                     width="100%" 
@@ -1250,6 +1378,34 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Menu Mobile Toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navMobile = document.getElementById('navMobile');
+            
+            if (menuToggle && navMobile) {
+                menuToggle.addEventListener('click', function() {
+                    navMobile.classList.toggle('active');
+                    // Animação do menu hamburger
+                    const spans = menuToggle.querySelectorAll('span');
+                    spans[0].classList.toggle('active');
+                    spans[1].classList.toggle('active');
+                    spans[2].classList.toggle('active');
+                });
+                
+                // Fechar menu ao clicar em um link
+                const mobileLinks = navMobile.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navMobile.classList.remove('active');
+                        const spans = menuToggle.querySelectorAll('span');
+                        spans[0].classList.remove('active');
+                        spans[1].classList.remove('active');
+                        spans[2].classList.remove('active');
+                    });
+                });
+            }
+            
+            // FAQ Accordion
             const faqPerguntas = document.querySelectorAll('.faq-pergunta');
             
             faqPerguntas.forEach(pergunta => {
@@ -1275,6 +1431,7 @@
                 });
             });
             
+            // Galerias
             configurarGaleria('galeria-avaliacoes', 'anterior-avaliacoes', 'proxima-avaliacoes', 'indicadores-avaliacoes');
             configurarGaleria('galeria-diferencial', 'anterior-diferencial', 'proxima-diferencial', 'indicadores-diferencial');
             
