@@ -143,12 +143,13 @@
             color: var(--rosa-principal);
         }
 
-        /* Menu Mobile */
+        /* Menu Mobile - Hamburger */
         .menu-toggle {
             display: none;
             flex-direction: column;
             cursor: pointer;
             padding: 5px;
+            z-index: 1001;
         }
 
         .menu-toggle span {
@@ -157,6 +158,19 @@
             background-color: var(--rosa-principal);
             margin: 3px 0;
             transition: 0.3s;
+        }
+
+        /* Animação do Hamburger */
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
         }
 
         .nav-mobile {
@@ -774,7 +788,7 @@
         }
 
         @media (max-width: 768px) {
-            /* Menu Mobile */
+            /* Menu Mobile - Logo à esquerda, Hamburger à direita */
             .nav-desktop {
                 display: none;
             }
@@ -784,12 +798,13 @@
             }
             
             .header-container {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
             }
             
-            nav {
-                width: 100%;
+            .logo-img {
+                height: 40px; /* Ajuste para mobile */
             }
             
             .hero {
@@ -833,13 +848,33 @@
             }
             
             .catalogo-mini-item {
-                height: 250px; /* Aumentei a altura para mostrar mais da imagem */
+                height: auto; /* Altura automática para mostrar imagem completa */
+                min-height: 200px;
                 width: 100%;
             }
             
             .catalogo-mini-item img {
-                object-fit: contain; /* Mudei para contain para mostrar a imagem completa */
+                object-fit: contain; /* Mostra a imagem completa */
                 background-color: var(--rosa-suave); /* Fundo para áreas transparentes */
+                width: 100%;
+                height: auto;
+            }
+
+            /* Imagem do Sistema de Numerações - Mostrar completa */
+            .catalogo-destaque-img {
+                height: auto;
+                min-height: 300px;
+            }
+            
+            .catalogo-destaque-img img {
+                object-fit: contain;
+                background-color: var(--rosa-suave);
+            }
+
+            /* Galerias - Imagens completas */
+            .galeria-item img {
+                object-fit: contain;
+                background-color: var(--rosa-suave);
             }
         }
 
@@ -857,11 +892,16 @@
             }
             
             .catalogo-mini-item {
-                height: 200px;
+                height: auto;
+                min-height: 180px;
             }
             
             .funcionalidade-content {
                 padding: 20px;
+            }
+
+            .catalogo-destaque-img {
+                min-height: 250px;
             }
         }
     </style>
@@ -872,9 +912,10 @@
     ============================== -->
     <header>
         <div class="container header-container">
+            <!-- Logo à esquerda -->
             <img src="https://res.cloudinary.com/dnluplt44/image/upload/v1762267463/Design_sem_nome_21_gdr1og.png" alt="Clube de Moldes Premium" class="logo-img">
             
-            <!-- Menu Toggle para Mobile -->
+            <!-- Menu Hamburger à direita -->
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
                 <span></span>
@@ -1385,11 +1426,7 @@
             if (menuToggle && navMobile) {
                 menuToggle.addEventListener('click', function() {
                     navMobile.classList.toggle('active');
-                    // Animação do menu hamburger
-                    const spans = menuToggle.querySelectorAll('span');
-                    spans[0].classList.toggle('active');
-                    spans[1].classList.toggle('active');
-                    spans[2].classList.toggle('active');
+                    menuToggle.classList.toggle('active');
                 });
                 
                 // Fechar menu ao clicar em um link
@@ -1397,10 +1434,7 @@
                 mobileLinks.forEach(link => {
                     link.addEventListener('click', function() {
                         navMobile.classList.remove('active');
-                        const spans = menuToggle.querySelectorAll('span');
-                        spans[0].classList.remove('active');
-                        spans[1].classList.remove('active');
-                        spans[2].classList.remove('active');
+                        menuToggle.classList.remove('active');
                     });
                 });
             }
